@@ -1,0 +1,235 @@
+echo "# Car-AI-Index" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/tomdeparde-debug/Car-AI-Index.git
+git push -u origin main<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Fiche Auto</title>
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f172a,#1e293b);color:#e2e8f0;min-height:100%;}
+input,select,textarea{-webkit-user-select:text;user-select:text;font:inherit;}
+.app{padding:clamp(12px,4vw,24px);max-width:560px;margin:0 auto;}
+header{margin-bottom:18px;}
+header h1{margin:0;font-size:1.5rem;font-weight:700;letter-spacing:.2px;}
+header p{margin:4px 0 0;color:#94a3b8;font-size:.92rem;}
+.card{background:rgba(30,41,59,.85);border:1px solid rgba(148,163,184,.15);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.step{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:#38bdf8;font-weight:700;margin-bottom:6px;}
+h2{margin:0 0 12px;font-size:1.15rem;}
+label{display:block;font-size:.85rem;color:#94a3b8;margin:12px 0 6px;}
+input[type=text],select{width:100%;padding:13px 14px;border-radius:12px;border:1px solid #334155;background:#0f172a;color:#f1f5f9;font-size:1rem;outline:none;min-height:46px;}
+input[type=text]:focus,select:focus{border-color:#38bdf8;}
+.row{display:flex;gap:10px;}
+.row>*{flex:1;min-width:0;}
+.btn{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:48px;padding:12px 16px;border-radius:14px;border:none;background:linear-gradient(135deg,#0ea5e9,#2563eb);color:#fff;font-size:1rem;font-weight:600;cursor:pointer;margin-top:16px;transition:transform .08s,opacity .2s;text-decoration:none;}
+.btn:active{transform:scale(.98);opacity:.85;}
+.btn:disabled{opacity:.5;cursor:default;}
+.btn.ghost{background:transparent;border:1px solid #334155;color:#cbd5e1;}
+.btn.small{width:auto;min-height:40px;padding:8px 14px;font-size:.9rem;margin-top:0;}
+.hidden{display:none !important;}
+.chips{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{flex:1;min-width:110px;padding:12px;border-radius:12px;border:1px solid #334155;background:#0f172a;color:#cbd5e1;text-align:center;cursor:pointer;min-height:46px;font-size:.95rem;}
+.chip.on{border-color:#38bdf8;background:rgba(56,189,248,.15);color:#fff;}
+.summary{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;}
+.summary .name{font-weight:700;font-size:1.05rem;}
+.summary .sub{color:#94a3b8;font-size:.85rem;}
+.stat{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid rgba(148,163,184,.12);gap:12px;}
+.stat:first-of-type{border-top:none;}
+.stat .k{color:#94a3b8;font-size:.9rem;}
+.stat .v{font-weight:600;text-align:right;}
+.badge{display:inline-block;font-size:.7rem;padding:3px 8px;border-radius:999px;margin-left:6px;vertical-align:middle;font-weight:600;}
+.b-exact{background:rgba(34,197,94,.18);color:#4ade80;}
+.b-est{background:rgba(251,191,36,.18);color:#fbbf24;}
+.b-web{background:rgba(56,189,248,.18);color:#7dd3fc;}
+.engine{background:#0f172a;border-radius:12px;padding:12px;margin-top:8px;border:1px solid #1e293b;}
+.engine .t{font-weight:600;margin-bottom:4px;}
+.engine .d{color:#94a3b8;font-size:.85rem;}
+.note{color:#64748b;font-size:.78rem;margin-top:10px;line-height:1.4;}
+.empty{text-align:center;color:#94a3b8;padding:24px 8px;}
+.empty .big{font-size:2.4rem;margin-bottom:6px;}
+.loader{text-align:center;color:#94a3b8;padding:28px 8px;}
+.spinner{width:34px;height:34px;margin:0 auto 12px;border-radius:50%;border:3px solid #334155;border-top-color:#38bdf8;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#f1f5f9;color:#0f172a;padding:12px 18px;border-radius:12px;font-size:.9rem;font-weight:600;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s,transform .25s,visibility .25s;max-width:90%;text-align:center;z-index:50;}
+.toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.hint{color:#64748b;font-size:.8rem;margin-top:6px;}
+.google-btn{background:linear-gradient(135deg,#f59e0b,#ea4335);}
+.google-row{margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Fiche Auto</h1>
+    <p>Tapez une marque et un modèle, recherchez la fiche sur Google</p>
+  </header>
+
+  <section class="card" id="stepBrand">
+    <div class="step">Étape 1 sur 2</div>
+    <h2>Quelle voiture ?</h2>
+    <label for="brand">Marque</label>
+    <input type="text" id="brand" placeholder="Ex : Peugeot, Renault, BMW…" autocomplete="off" autocapitalize="words">
+    <label for="model">Modèle</label>
+    <input type="text" id="model" placeholder="Ex : 208, Clio, Série 3…" autocomplete="off" autocapitalize="words">
+    <label for="edition">Version ou édition (facultatif)</label>
+    <input type="text" id="edition" placeholder="Ex : GT Line, Edition One…" autocomplete="off">
+    <button class="btn google-btn" id="btnSearch">Rechercher sur Google</button>
+    <div class="hint">La recherche s'ouvre dans Google pour trouver la fiche technique.</div>
+  </section>
+
+  <section class="card hidden" id="stepResult">
+    <div class="step">Étape 2 sur 2</div>
+    <div class="summary">
+      <div>
+        <div class="name" id="resName"></div>
+        <div class="sub" id="resSub"></div>
+      </div>
+      <button class="btn ghost small" id="btnEdit">Modifier</button>
+    </div>
+    <div class="hint">Ouvrez les résultats Google ci-dessous pour consulter la fiche complète (prix, puissance, poids, motorisations).</div>
+    <a class="btn google-btn google-row" id="btnOpenGoogle" href="#" target="_blank" rel="noopener">Ouvrir les résultats Google</a>
+    <div class="note">Les chiffres doivent être vérifiés sur les sources officielles du constructeur.</div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const APP_STORAGE_KEY = 'app_1792171619123_657pt7ts';
+window.APP_STORAGE_KEY = APP_STORAGE_KEY;
+document.addEventListener('dblclick', e => e.preventDefault());
+
+const $ = id => document.getElementById(id);
+let state = { brand: "", model: "", edition: "" };
+
+function toast(msg){
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(window.__tt);
+  window.__tt = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+function loadState(){
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(APP_STORAGE_KEY + "_data")); } catch(e){}
+  if(!s || typeof s !== "object" || Array.isArray(s)) s = {};
+  return {
+    brand: typeof s.brand === "string" ? s.brand : "",
+    model: typeof s.model === "string" ? s.model : "",
+    edition: typeof s.edition === "string" ? s.edition : ""
+  };
+}
+function saveState(){
+  try { localStorage.setItem(APP_STORAGE_KEY + "_data", JSON.stringify(state)); } catch(e){}
+}
+
+function showStep(which){
+  $("stepBrand").classList.toggle("hidden", which !== "brand");
+  $("stepResult").classList.toggle("hidden", which !== "result");
+  window.scrollTo(0,0);
+}
+
+function buildQuery(){
+  const parts = [state.brand, state.model];
+  if(state.edition.trim()) parts.push(state.edition.trim());
+  return parts.join(" ");
+}
+
+function googleUrl(){
+  const q = buildQuery() + " fiche technique prix puissance poids motorisation";
+  return "https://www.google.com/search?q=" + encodeURIComponent(q);
+}
+
+function renderResult(){
+  $("resName").textContent = `${state.brand} ${state.model}`;
+  $("resSub").textContent = state.edition.trim();
+  $("btnOpenGoogle").href = googleUrl();
+  showStep("result");
+}
+
+function runSearch(){
+  const brand = $("brand").value.trim();
+  const model = $("model").value.trim();
+  if(!brand || !model){ toast("Indiquez au moins la marque et le modèle."); return; }
+  state.brand = brand;
+  state.model = model;
+  state.edition = $("edition").value.trim();
+  saveState();
+  renderResult();
+  window.open(googleUrl(), "_blank", "noopener");
+}
+
+function init(){
+  const s = loadState();
+  state = { ...state, ...s };
+  $("brand").value = state.brand;
+  $("model").value = state.model;
+  $("edition").value = state.edition;
+
+  $("btnSearch").addEventListener("click", runSearch);
+  ["brand","model","edition"].forEach(id => {
+    $(id).addEventListener("keydown", e => { if(e.key === "Enter") runSearch(); });
+  });
+  $("btnEdit").addEventListener("click", () => showStep("brand"));
+
+  if(state.brand && state.model){
+    renderResult();
+  } else {
+    showStep("brand");
+  }
+}
+
+init();
+
+
+// Android WebView focus crash prevention
+document.addEventListener("focusin", function(e) {
+    if (e.target.tagName === "INPUT" && (e.target.type === "time" || e.target.type === "date" || e.target.type === "datetime-local")) {
+        setTimeout(() => e.target.blur(), 100);
+    }
+});
+
+// Time picker functionality for Android compatibility
+function showTimePicker(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    input.blur();
+    document.activeElement.blur();
+    
+    // Simple time picker using prompt (can be enhanced with custom modal)
+    const currentTime = input.value || "12:00";
+    const newTime = prompt("Enter time (HH:MM):", currentTime);
+    
+    if (newTime && /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(newTime)) {
+        input.value = newTime;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+}
+
+// Date picker functionality for Android compatibility  
+function showDatePicker(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    input.blur();
+    document.activeElement.blur();
+    
+    // Simple date picker using prompt (can be enhanced with custom modal)
+    const currentDate = input.value || new Date().toISOString().split('T')[0];
+    const newDate = prompt("Enter date (YYYY-MM-DD):", currentDate);
+    
+    if (newDate && /^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
+        input.value = newDate;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+}
+</script>
+</body>
+</html>
